@@ -114,29 +114,37 @@
       if (file) reader.readAsDataURL(file);
     }
 
-    function gerarPDF() {
-      atualizarPreview();
-      setTimeout(() => {
-        const element = document.getElementById("curriculo-preview");
-        const opt = {
-          margin: 0.5,
-          filename: 'curriculo.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-          pagebreak: { mode: ['css', 'legacy'] }
-        };
-        html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
-          const blob = pdf.output('blob');
-          const url = URL.createObjectURL(blob);
+    <script>
+  function gerarPDF() {
+    atualizarPreview();
+    setTimeout(() => {
+      const element = document.getElementById("curriculo-preview");
+      const opt = {
+        margin: 0.5,
+        filename: 'curriculo.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      };
+      html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+        const blob = pdf.output('blob');
+        const url = URL.createObjectURL(blob);
 
-          // 🔥 Abre o PDF numa nova aba (compatível com celular)
-          window.open(url, '_blank');
+        // Cria um link oculto e simula o clique para download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'curriculo.pdf';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }, 500);
+  }
+</script>
 
-          setTimeout(() => URL.revokeObjectURL(url), 10000);
-        });
-      }, 500);
-    }
 
     function limparFormulario() {
       const campos = ['nome', 'email', 'telefone', 'endereco', 'site', 'resumo', 'experiencia', 'educacao', 'certificacoes', 'idiomas'];
