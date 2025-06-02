@@ -114,33 +114,29 @@
       if (file) reader.readAsDataURL(file);
     }
 
-    <script>
-  function gerarPDF() {
-    atualizarPreview();
-    setTimeout(() => {
-      const element = document.getElementById("curriculo-preview");
-      const opt = {
-        margin: 0.5,
-        filename: 'curriculo.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
-      };
-      html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
-        const blob = pdf.output('blob');
-        const url = URL.createObjectURL(blob);
+    function gerarPDF() {
+      atualizarPreview();
+      setTimeout(() => {
+        const element = document.getElementById("curriculo-preview");
+        const opt = {
+          margin: 0.5,
+          filename: 'curriculo.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['css', 'legacy'] }
+        };
+        html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+          const blob = pdf.output('blob');
+          const url = URL.createObjectURL(blob);
 
-        // 🔥 Funciona melhor em celulares: abre o PDF numa nova aba
-        window.open(url, '_blank');
+          // 🔥 Abre o PDF numa nova aba (compatível com celular)
+          window.open(url, '_blank');
 
-        // Libera memória depois
-        setTimeout(() => URL.revokeObjectURL(url), 10000);
-      });
-    }, 500);
-  }
-</script>
-
+          setTimeout(() => URL.revokeObjectURL(url), 10000);
+        });
+      }, 500);
+    }
 
     function limparFormulario() {
       const campos = ['nome', 'email', 'telefone', 'endereco', 'site', 'resumo', 'experiencia', 'educacao', 'certificacoes', 'idiomas'];
