@@ -126,7 +126,18 @@
           jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
           pagebreak: { mode: ['css', 'legacy'] }
         };
-        html2pdf().set(opt).from(element).save();
+        html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+          const blob = pdf.output('blob');
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'curriculo.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
       }, 500);
     }
 
@@ -138,7 +149,6 @@
       atualizarPreview();
     }
 
-    // Atualiza preview ao carregar a página
     window.onload = () => atualizarPreview();
   </script>
 </body>
